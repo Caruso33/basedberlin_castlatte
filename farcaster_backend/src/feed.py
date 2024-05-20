@@ -36,7 +36,7 @@ def get_following_feed(fid: int) -> List[Any]:
 
     base_url = f"https://api.neynar.com/v2/farcaster/feed/following"
 
-    query_params = {"fid": fid, "limit": 100, "viewer_fid": fid, "with_recasts": True}
+    query_params = {"fid": fid, "limit": 100, "with_recasts": True}
 
     following_feed = []
 
@@ -51,7 +51,6 @@ def get_following_feed(fid: int) -> List[Any]:
             base_url
             + f"?fid={query_params['fid']}"
             + f"&limit={query_params['limit']}"
-            + f"&viewer_fid={query_params['viewer_fid']}"
             + f"&with_recasts={query_params['with_recasts']}"
         )
         if "cursor" in query_params:

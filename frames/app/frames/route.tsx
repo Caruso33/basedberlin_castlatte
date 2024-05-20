@@ -56,8 +56,6 @@ const frameHandler = frames(async (ctx: any) => {
   if (page === 4) {
     console.log("check if agents have finished, if not show page 3 again")
 
-    console.log("requesterId", requesterFid)
-
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_FARCASTER_BACKEND_URL}/summary/${requesterFid}`
     )

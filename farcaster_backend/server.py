@@ -22,6 +22,7 @@ def feed(fid):
     ):
         os.remove(os.path.join(os.getcwd(), "data", f"{fid}_summarized_content.json"))
 
+    return jsonify({"message": "Success"})
     casts = get_following_feed(fid)
     print(f"casts {len(casts)}\n")
 
@@ -77,7 +78,7 @@ def serve_summary(fid):
         return jsonify({"error": "Please provide 'fid' parameter."}), 400
 
     summary_file_path = os.path.join(
-        os.getcwd(), "data", f"{fid}_summerized_content.json"
+        os.getcwd(), "data", f"{fid}_summarized_content.json"
     )
 
     if os.path.exists(summary_file_path):
