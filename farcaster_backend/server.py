@@ -22,7 +22,6 @@ def feed(fid):
     ):
         os.remove(os.path.join(os.getcwd(), "data", f"{fid}_summarized_content.json"))
 
-    return jsonify({"message": "Success"})
     casts = get_following_feed(fid)
     print(f"casts {len(casts)}\n")
 

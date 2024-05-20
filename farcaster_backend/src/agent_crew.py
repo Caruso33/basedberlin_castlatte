@@ -90,7 +90,7 @@ summerizeTask = Task(
                             A valid jason. No preamble or epilogue, only pure parsable JSON.
                             """,
     agent=summerizeAgent,
-    callback=lambda output: save_file(output, "summerized_content.json"),
+    callback=lambda output: save_file(output, "summarized_content.json"),
 )
 
 AgentCrew = Crew(
