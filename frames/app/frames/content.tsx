@@ -126,7 +126,20 @@ export default function getFramesContent(page: number, summary?: object): any {
             </div>
           </div>
         ),
-        buttons: [],
+        buttons: [
+          <Button
+            action="post"
+            target={{
+              pathname: "/",
+              query: {
+                pageIndex: String(page),
+                op: "mint_nft",
+              },
+            }}
+          >
+            Mint
+          </Button>,
+        ],
       }
 
     default: {
