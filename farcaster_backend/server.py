@@ -39,15 +39,13 @@ def process(fid):
 
     print(f"casts {casts} {type(casts)} interests {interests} {type(interests)}\n")
 
-    return jsonify({"success": True})
+    casts_list = [{"text": cast} for cast in casts]
 
-    # casts_list = [{"text": cast} for cast in casts]
+    result = AgentCrew.kickoff(
+        inputs={"fid": fid, "casts": casts_list, "interests": interests}
+    )
 
-    # result = AgentCrew.kickoff(
-    #     inputs={"fid": fid, "casts": casts_list, "interests": interests}
-    # )
-
-    # return jsonify({"result": result})
+    return jsonify({"result": result})
 
 
 if __name__ == "__main__":

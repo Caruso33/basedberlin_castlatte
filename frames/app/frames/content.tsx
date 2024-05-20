@@ -5,6 +5,7 @@ export const images = [
   "https://i.imgur.com/bM67J6s.png",
   "https://i.imgur.com/igoXsBp.png",
   "https://i.imgur.com/eIHv5wk.png",
+  "https://i.imgur.com/eQZg5r3.png",
 ]
 
 export default function getFramesContent(page: number): any {
