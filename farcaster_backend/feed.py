@@ -12,7 +12,7 @@ load_dotenv()
 NEYNAR_API_KEY = os.getenv("NEYNAR_API_KEY")
 
 
-def filter_old_casts(casts):
+def _filter_old_casts(casts):
     threshold_time = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
         hours=48
     )
@@ -67,7 +67,7 @@ def get_following_feed(fid: int) -> List[Any]:
 
         data = response.json()
 
-        casts = filter_old_casts(data["casts"])
+        casts = _filter_old_casts(data["casts"])
 
         query_params["cursor"] = data["next"]["cursor"]
         following_feed.extend(casts)

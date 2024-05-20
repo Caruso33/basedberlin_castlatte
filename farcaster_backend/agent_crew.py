@@ -64,10 +64,31 @@ analyzerTask = Task(
     agent=analyzerAgent,
 )
 
+summerizeAgent = Agent(
+    role="Creates a concise, easy-to-digest summary of the analyzed data.",
+    goal="Provide a clear and comprehensive summary of the most important insights from the past 24 hours.",
+    backstory="Born from a need to translate complex datasets into executive summaries for busy stakeholders, this agent specializes in clear, effective communication.",
+    llm=GROQ_LLM,
+    verbose=False,
+    allow_delegation=False,
+    max_iter=5,
+    memory=True,
+)
+
+summerizeTask = Task(
+    description="""
+                        Generate a brief report of the user's fid {fid} analyzed feed. Condense it in a paragraph of 50 words maximum.
+                        json Template: "Topic of interest": ["50 words summery"]
+                        """,
+    expected_output="""
+                            A valid jason. No preamble or epilogue, only pure parsable JSON.
+                            """,
+    agent=summerizeAgent,
+)
 
 AgentCrew = Crew(
-    agents=[cleanerAgent, analyzerAgent],
-    tasks=[filterTask, analyzerTask],
+    agents=[cleanerAgent, analyzerAgent, summerizeAgent],
+    tasks=[filterTask, analyzerTask, summerizeTask],
     verbose=2,
     process=Process.sequential,
 )
