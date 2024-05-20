@@ -36,7 +36,7 @@ def get_following_feed(fid: int) -> List[Any]:
 
     base_url = f"https://api.neynar.com/v2/farcaster/feed/following"
 
-    query_params = {"fid": fid, "limit": 10, "viewer_fid": fid, "with_recasts": True}
+    query_params = {"fid": fid, "limit": 1, "viewer_fid": fid, "with_recasts": True}
 
     following_feed = []
 
@@ -73,7 +73,7 @@ def get_following_feed(fid: int) -> List[Any]:
         query_params["cursor"] = data["next"]["cursor"]
         following_feed.extend(casts)
 
-        if len(casts) >= 60 or runs > 9:
+        if len(casts) >= 5 or runs > 2:
             break
 
     print(f"retrieved {len(following_feed)} following feed for fid {fid}\n")

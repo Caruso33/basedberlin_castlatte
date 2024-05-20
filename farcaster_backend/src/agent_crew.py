@@ -1,7 +1,11 @@
+import json
 import os
-from crewai import Agent, Crew, Process, Task
-from langchain_groq import ChatGroq
+import re
+
 import dotenv
+from crewai import Agent, Crew, Process, Task
+from crewai.tasks.task_output import TaskOutput
+from langchain_groq import ChatGroq
 
 dotenv.load_dotenv()
 
@@ -35,6 +39,7 @@ filterTask = Task(
             A list of filtered social media posts in JSON format. No preamble or epilogue, only pure parsable JSON.
             """,
     agent=cleanerAgent,
+    callback=lambda output: save_file(output, "filtered_content.json"),
 )
 
 analyzerAgent = Agent(
@@ -62,6 +67,7 @@ analyzerTask = Task(
                             A valid json. No preamble or epilogue, only pure parsable JSON.
                             """,
     agent=analyzerAgent,
+    callback=lambda output: save_file(output, "analyzed_content.json"),
 )
 
 summerizeAgent = Agent(
@@ -84,6 +90,7 @@ summerizeTask = Task(
                             A valid jason. No preamble or epilogue, only pure parsable JSON.
                             """,
     agent=summerizeAgent,
+    callback=lambda output: save_file(output, "summerized_content.json"),
 )
 
 AgentCrew = Crew(
@@ -110,3 +117,34 @@ if __name__ == "__main__":
     )
 
     print(f"result {result}\n")
+
+
+def save_file(output: TaskOutput, filename: str) -> bool:
+
+    match = re.search(r"fid (\d+)", output.description)
+    if match:
+        fid = int(match.group(1))
+        print("matched\n")
+
+    is_json_parsable_cast = is_json_parsable(output.exported_output)
+    print(f"parsable? {is_json_parsable_cast}\n")
+
+    if fid is not None and is_json_parsable_cast:
+        print("is parsable\n")
+
+        with open(os.path.join(os.getcwd(), "data", f"{fid}_{filename}"), "w") as f:
+            f.write(str(output.exported_output))
+
+        print(f"Saved file {fid}_{filename}\n")
+        return True
+
+    print("Failed to save file\n")
+    return False
+
+
+def is_json_parsable(input_string: str) -> bool:
+    try:
+        json.loads(input_string)
+        return True
+    except json.JSONDecodeError:
+        return False

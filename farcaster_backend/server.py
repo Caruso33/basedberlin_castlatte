@@ -1,6 +1,9 @@
+import json
+import os
+
 from flask import Flask, jsonify, request
-from src.feed import get_following_feed
 from src.agent_crew import AgentCrew
+from src.feed import get_following_feed
 
 app = Flask(__name__)
 
@@ -9,6 +12,10 @@ app = Flask(__name__)
 def feed(fid):
     if fid is None:
         return jsonify({"error": "Please provide 'fid' parameter."}), 400
+
+    feed_file_path = os.path.join(os.getcwd(), "data", f"{fid}_feed.json")
+    if os.path.exists(feed_file_path):
+        os.remove(feed_file_path)
 
     casts = get_following_feed(fid)
     print(f"casts {len(casts)}\n")
@@ -25,6 +32,9 @@ def feed(fid):
 
         filtered_casts.append(cast)
 
+    with open(feed_file_path, "w") as f:
+        f.write(json.dumps(filtered_casts))
+
     return jsonify(filtered_casts)
 
 
@@ -34,15 +44,20 @@ def process(fid):
         return jsonify({"error": "Please provide 'fid' parameter."}), 400
 
     # fid = int(request.args.get("fid"))
-    casts = request.args.getlist("casts")
+
+    casts = os.path.join(os.getcwd(), "data", f"{fid}_feed.json")
+
+    if not os.path.exists(casts):
+        return jsonify({"error": "User feed not found"}), 404
+
     interests = request.args.getlist("interests")
 
     print(f"casts {casts} {type(casts)} interests {interests} {type(interests)}\n")
 
-    casts_list = [{"text": cast} for cast in casts]
+    # casts_list = [{"text": cast} for cast in casts]
 
     result = AgentCrew.kickoff(
-        inputs={"fid": fid, "casts": casts_list, "interests": interests}
+        inputs={"fid": fid, "casts": casts, "interests": interests}
     )
 
     return jsonify({"result": result})

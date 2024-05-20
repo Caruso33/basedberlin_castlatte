@@ -17,6 +17,12 @@ const frameHandler = frames(async (ctx: any) => {
   if (page === 1) {
     console.log(`fetch here feed of fid ${requesterFid}`)
 
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_FARCASTER_BACKEND_URL}/feed/${requesterFid}`
+    )
+    const data = await response.json()
+    console.log(`page 1 response casts length ${data.length}`)
+
     return getFramesContent(page)
   }
 

@@ -2,3 +2,5 @@ _resources
 __pycache__
 
 .env
+
+farcaster_backend/data/*.json
