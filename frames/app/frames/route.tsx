@@ -3,6 +3,12 @@ import { Button } from "frames.js/next"
 import { frames } from "./frames"
 import { appURL } from "../utils"
 
+const images = [
+  "https://i.imgur.com/bM67J6s.png",
+  "https://i.imgur.com/igoXsBp.png",
+  "https://i.imgur.com/eIHv5wk.png",
+]
+
 const frameHandler = frames(async (ctx: any) => {
   const page = Number(ctx.searchParams?.pageIndex ?? 0)
 
@@ -14,18 +20,22 @@ const frameHandler = frames(async (ctx: any) => {
 
   if (page === 0) {
     return {
-      image: (
-        <div tw="flex flex-col">
-          <div tw="flex">Milk your Feed</div>
+      image: images[page]!,
+      // (
+      //   <div tw="flex flex-col">
+      //     <div tw="flex">Milk your Feed</div>
 
-          <div tw="flex">Cream your Interest</div>
+      //     <div tw="flex">Cream your Interest</div>
 
-          {/* {ctx.message?.inputText && (
-          <div tw="flex">{`Input: ${ctx.message.inputText}`}</div>
-        )} */}
-          {/* <div tw="flex">Test {counter}</div> */}
-        </div>
-      ),
+      //     {/* {ctx.message?.inputText && (
+      //     <div tw="flex">{`Input: ${ctx.message.inputText}`}</div>
+      //   )} */}
+      //     {/* <div tw="flex">Test {counter}</div> */}
+      //   </div>
+      // ),
+      imageOptions: {
+        aspectRatio: "1:1",
+      },
       // textInput: "Say something",
       buttons: [
         <Button
@@ -65,6 +75,9 @@ const frameHandler = frames(async (ctx: any) => {
           )}
         </div>
       ),
+      imageOptions: {
+        aspectRatio: "1:1",
+      },
       textInput: "Type in your interest here...",
       buttons: [
         <Button
@@ -108,7 +121,50 @@ const frameHandler = frames(async (ctx: any) => {
             Castlatte!
           </div>
 
-          <div tw="flex">Tryi in 2 minutes!</div>
+          <div tw="flex">Try in 2 minutes!</div>
+        </div>
+      ),
+      imageOptions: {
+        aspectRatio: "1:1",
+      },
+      textInput: "Type in your interest here...",
+      buttons: [
+        <Button
+          action="post"
+          target={{
+            pathname: "/",
+            query: {
+              pageIndex: String(page + 1), // % nfts.length),
+              op: "choose_interest_for_me",
+            },
+          }}
+        >
+          Choose for me!
+        </Button>,
+        <Button
+          action="post"
+          target={{
+            pathname: "/",
+            query: {
+              pageIndex: String(page + 1),
+              op: "typed_interest",
+            },
+          }}
+        >
+          Typed my interest!
+        </Button>,
+      ],
+      state: { counter: counter },
+    }
+  }
+
+  if (page === 3) {
+    return {
+      image: (
+        <div tw="flex flex-col">
+          <div tw="flex">Your summary</div>
+
+          <div tw="flex">AI generated summary</div>
         </div>
       ),
       textInput: "Type in your interest here...",
@@ -140,6 +196,10 @@ const frameHandler = frames(async (ctx: any) => {
       ],
       state: { counter: counter },
     }
+  }
+
+  return {
+    image: <div tw="flex">Oops, how did we end up here?</div>,
   }
 })
 
