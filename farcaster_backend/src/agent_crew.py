@@ -93,16 +93,20 @@ AgentCrew = Crew(
     process=Process.sequential,
 )
 
-fid = 3
-casts = [
-    {"text": "text1"},
-    {"text": "text2"},
-    {"text": "text3"},
-    {"text": "text4"},
-    {"text": "text5"},
-]
-interests = ["AI", "web3"]
+if __name__ == "__main__":
 
-result = AgentCrew.kickoff(inputs={"fid": fid, "casts": casts, "interests": interests})
+    fid = 3
+    casts = [
+        {"text": "text1"},
+        {"text": "text2"},
+        {"text": "text3"},
+        {"text": "text4"},
+        {"text": "text5"},
+    ]
+    interests = ["AI", "web3"]
 
-print(f"result {result}\n")
+    result = AgentCrew.kickoff(
+        inputs={"fid": fid, "casts": casts, "interests": interests}
+    )
+
+    print(f"result {result}\n")

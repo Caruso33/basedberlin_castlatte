@@ -1,5 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from src.feed import get_following_feed
+from src.agent_crew import AgentCrew
 
 app = Flask(__name__)
 
@@ -25,6 +26,28 @@ def feed(fid):
         filtered_casts.append(cast)
 
     return jsonify(filtered_casts)
+
+
+@app.route("/process_feed/<int:fid>", methods=["GET"])
+def process(fid):
+    if fid is None:
+        return jsonify({"error": "Please provide 'fid' parameter."}), 400
+
+    # fid = int(request.args.get("fid"))
+    casts = request.args.getlist("casts")
+    interests = request.args.getlist("interests")
+
+    print(f"casts {casts} {type(casts)} interests {interests} {type(interests)}\n")
+
+    return jsonify({"success": True})
+
+    # casts_list = [{"text": cast} for cast in casts]
+
+    # result = AgentCrew.kickoff(
+    #     inputs={"fid": fid, "casts": casts_list, "interests": interests}
+    # )
+
+    # return jsonify({"result": result})
 
 
 if __name__ == "__main__":
