@@ -84,7 +84,7 @@ summerizeAgent = Agent(
 summerizeTask = Task(
     description="""
                         Generate a brief report of the user's fid {fid} analyzed feed. Condense it in a paragraph of 50 words maximum.
-                        json Template: "Topic of interest": ["50 words summary"]
+                        json Template: "Topic of interest": "50 words summary"
                         """,
     expected_output="""
                             A valid jason. No preamble or epilogue, only pure parsable JSON.

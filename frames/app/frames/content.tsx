@@ -5,10 +5,10 @@ export const images = [
   "https://i.imgur.com/bM67J6s.png",
   "https://i.imgur.com/igoXsBp.png",
   "https://i.imgur.com/eIHv5wk.png",
-  "https://i.imgur.com/eQZg5r3.png",
+  "https://i.imgur.com/FAeFAga.png",
 ]
 
-export default function getFramesContent(page: number): any {
+export default function getFramesContent(page: number, summary?: object): any {
   switch (page) {
     case 0:
       return {
@@ -90,11 +90,40 @@ export default function getFramesContent(page: number): any {
 
     case 3:
       return {
+        image: images[page]!,
+        imageOptions: {
+          aspectRatio: "1:1",
+        },
+        buttons: [
+          <Button
+            action="post"
+            target={{
+              pathname: "/",
+              query: {
+                pageIndex: String(page + 1),
+                op: "get_summary",
+              },
+            }}
+          >
+            Refresh
+          </Button>,
+        ],
+      }
+
+    case 4:
+      return {
         image: (
-          <div tw="flex flex-col">
+          <div tw="flex flex-col bg-[#FFF9C4]">
             <div tw="flex">Your summary</div>
 
-            <div tw="flex">AI generated summary</div>
+            <div tw="flex flex-col items-center justify-center">
+              {Object.entries(summary!).map(([key, value]) => (
+                <div tw="flex flex-col items-center justify-center">
+                  <div tw="flex center">{key}:</div>
+                  <div tw="flex center">{value}</div>
+                </div>
+              ))}
+            </div>
           </div>
         ),
         buttons: [],

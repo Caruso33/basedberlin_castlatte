@@ -50,6 +50,8 @@ def process(fid):
 
     casts = os.path.join(os.getcwd(), "data", f"{fid}_feed.json")
 
+    return jsonify()
+
     if not os.path.exists(casts):
         return jsonify({"error": "User feed not found"}), 404
 
@@ -64,6 +66,23 @@ def process(fid):
     )
 
     return jsonify({"result": result})
+
+
+@app.route("/summary/<int:fid>", methods=["GET"])
+def serve_summary(fid):
+    if fid is None:
+        return jsonify({"error": "Please provide 'fid' parameter."}), 400
+
+    summary_file_path = os.path.join(
+        os.getcwd(), "data", f"{fid}_summerized_content.json"
+    )
+
+    if os.path.exists(summary_file_path):
+        with open(summary_file_path, "r") as f:
+            summary = json.loads(f.read())
+        return jsonify(summary)
+    else:
+        return jsonify({"error": "Summary file not found"}), 404
 
 
 if __name__ == "__main__":
