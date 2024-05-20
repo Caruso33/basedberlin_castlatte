@@ -14,29 +14,34 @@ def feed(fid):
         return jsonify({"error": "Please provide 'fid' parameter."}), 400
 
     feed_file_path = os.path.join(os.getcwd(), "data", f"{fid}_feed.json")
-    # if os.path.exists(feed_file_path):
-    #     os.remove(feed_file_path)
+    if os.path.exists(feed_file_path):
+        os.remove(feed_file_path)
 
-    # casts = get_following_feed(fid)
-    # print(f"casts {len(casts)}\n")
+    if os.path.exists(
+        os.path.join(os.getcwd(), "data", f"{fid}_summarized_content.json")
+    ):
+        os.remove(os.path.join(os.getcwd(), "data", f"{fid}_summarized_content.json"))
 
-    # filtered_casts = []
-    # for cast in casts:
-    #     if "embeds" in cast and len(cast["embeds"]) > 0:
-    #         continue  # filter out images
+    casts = get_following_feed(fid)
+    print(f"casts {len(casts)}\n")
 
-    #     temp_keys = list(cast.keys())
-    #     for key in temp_keys:
-    #         if key != "text":
-    #             del cast[key]
+    filtered_casts = []
+    for cast in casts:
+        if "embeds" in cast and len(cast["embeds"]) > 0:
+            continue  # filter out images
 
-    #     filtered_casts.append(cast)
+        temp_keys = list(cast.keys())
+        for key in temp_keys:
+            if key != "text":
+                del cast[key]
 
-    # with open(feed_file_path, "w") as f:
-    #     f.write(json.dumps(filtered_casts))
+        filtered_casts.append(cast)
 
-    with open(feed_file_path, "r") as f:
-        filtered_casts = json.loads(f.read())
+    with open(feed_file_path, "w") as f:
+        f.write(json.dumps(filtered_casts))
+
+    # with open(feed_file_path, "r") as f:
+    #     filtered_casts = json.loads(f.read())
 
     return jsonify(filtered_casts)
 
@@ -49,8 +54,6 @@ def process(fid):
     # fid = int(request.args.get("fid"))
 
     casts = os.path.join(os.getcwd(), "data", f"{fid}_feed.json")
-
-    return jsonify()
 
     if not os.path.exists(casts):
         return jsonify({"error": "User feed not found"}), 404
