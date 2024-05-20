@@ -67,7 +67,8 @@ def get_following_feed(fid: int) -> List[Any]:
 
         data = response.json()
 
-        casts = _filter_old_casts(data["casts"])
+        [casts, filtered_count] = _filter_old_casts(data["casts"])
+        print(f"filtered_count {filtered_count}\n")
 
         query_params["cursor"] = data["next"]["cursor"]
         following_feed.extend(casts)
