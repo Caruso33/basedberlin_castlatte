@@ -37,9 +37,37 @@ filterTask = Task(
     agent=cleanerAgent,
 )
 
+analyzerAgent = Agent(
+    role="Analyzes the filtered content to identify themes, trends, and important updates.",
+    goal="Extract meaningful insights from the filtered data.",
+    backstory="With a foundation in trend analysis and predictive modeling, this agent has been fine-tuned to pick up on subtle nuances in social interactions and community dynamics.",
+    llm=GROQ_LLM,
+    verbose=False,
+    allow_delegation=False,
+    max_iter=5,
+    memory=True,
+)
+
+analyzerTask = Task(
+    description="""
+                        Analyze the feed of the user's fid {fid} filtered by user's topic of interest: \n {interests} \n & extract various insights, identify trending discussions, trending topics, community sentiment, mention frequency analysis.
+                        Context: The feed is from a decentralized social media network/protcool called, farcaster. Warpcast is the first and biggest client on this protocol. The network is built on Optimism (Layer2 on Ethereum) and is similar to twitter and reddit. Users can post called 'cast', own their identity and data and can freely move to another client app, without losing their network and data. Channels on farcaster written as /channel_name are similar to subreddits or groups in SM platforms. Most popular activity on farcaster is tipping memecoins, most famously $DEGEN. Other famous memecoins are $TN100x aka Ham, floties, $onchain, $higher, $build (where builders nominate (tip) each other), $enjoy and bunch of other. Most these memecoins are on Base network (A layer2 on ethereum). Base is the most used blockchain network around where most activities happen on farcaster. 
+                        json output template: 
+                        "trending_discussions": []
+                        "trending_topics": []
+                        "community_sentiment": []
+                        "mention_frequency_analysis":[]
+                        """,
+    expected_output="""
+                            A valid json. No preamble or epilogue, only pure parsable JSON.
+                            """,
+    agent=analyzerAgent,
+)
+
+
 AgentCrew = Crew(
-    agents=[cleanerAgent],
-    tasks=[filterTask],
+    agents=[cleanerAgent, analyzerAgent],
+    tasks=[filterTask, analyzerTask],
     verbose=2,
     process=Process.sequential,
 )
